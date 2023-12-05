@@ -1,0 +1,86 @@
+body,
+html {
+  margin: 0;
+  height: 100%;
+  font-family: Arial, sans-serif;
+}
+
+.btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.app {
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 0.1;
+  background-color: #eee;
+  padding: 20px;
+}
+
+.canvas {
+  flex: 0.9;
+  background-color: #fff;
+  position: relative;
+}
+
+/* Styles for Add Text button */
+.add-text-btn {
+  background-color: #3498db;
+  color: #fff;
+}
+
+.add-text-btn:hover {
+  background-color: #2980b9;
+}
+
+/* Styles for Cancel button */
+.cancel-btn {
+  background-color: #e74c3c;
+  color: #fff;
+}
+
+.cancel-btn:hover {
+  background-color: #c0392b;
+}
+
+/* Canvas Elements Style */
+.text-box {
+  position: absolute;
+  border: 1px solid #000;
+  padding: 5px;
+  background-color: #fff;
+  font-family: Arial, sans-serif;
+}
+
+/* For Apply font size */
+.apply-font-size {
+  display: block;
+  margin-top: 10px;
+  padding: 8px 16px;
+  font-size: 14px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.apply-font-size:hover {
+  background-color: #45a049;
+}
+
+.apply-font-size:focus {
+  outline: none;
+}

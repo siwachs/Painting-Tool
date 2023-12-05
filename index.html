@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Painting Tool</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app">
+      <div class="sidebar">
+        <button
+          class="btn add-text-btn"
+          id="add-text-btn"
+          onclick="openPrompt()"
+        >
+          Add Text
+        </button>
+
+        <div>
+          <input type="number" id="font-size-input" placeholder="Font Size" />
+          <button class="btn apply-font-size" onclick="applyFontSize()">
+            Apply Font Size
+          </button>
+        </div>
+      </div>
+      <div class="canvas" id="canvas"></div>
+    </div>
+
+    <script src="main.js" defer></script>
+    <noscript>Sorry, your browser does not support JavaScript!</noscript>
+  </body>
+</html>
