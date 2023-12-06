@@ -4,29 +4,43 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Painting Tool</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="app">
-      <div class="sidebar">
+    <header class="container-fluid px-5 d-flex align-items-center header">
+      <div class="flex-grow-1">
         <button
-          class="btn add-text-btn"
+          class="btn btn-sm btn-primary"
           id="add-text-btn"
           onclick="openPrompt()"
         >
           Add Text
         </button>
+      </div>
 
-        <div>
+      <div class="d-flex align-items-center">
+        <form class="d-flex align-items-center" onsubmit="applyFontSize(event)">
           <input type="number" id="font-size-input" placeholder="Font Size" />
-          <button class="btn apply-font-size" onclick="applyFontSize()">
+          <button type="submit" class="btn btn-sm btn-primary">
             Apply Font Size
           </button>
-        </div>
+        </form>
       </div>
-      <div class="canvas" id="canvas"></div>
-    </div>
+    </header>
 
+    <div class="canvas" id="canvas"></div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
     <script src="main.js" defer></script>
     <noscript>Sorry, your browser does not support JavaScript!</noscript>
   </body>
