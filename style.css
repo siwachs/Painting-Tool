@@ -6,19 +6,21 @@ html {
 }
 
 .header {
-  height: 3.75rem;
-  border-bottom: 1px solid black;
-}
-
-.canvas {
+  position: sticky;
   width: 100%;
-  height: calc(100vh - 3.75rem);
-  position: relative;
+  height: 3.75rem;
+  top: 0;
 }
 
-.editable-text {
-  position: absolute;
-  border: 1px solid #ccc;
-  padding: 5px;
-  cursor: text;
+.nav-items-wrapper {
+  height: 3.75rem;
+}
+
+#canvas {
+  position: relative;
+  background: #fff;
+  width: 100%;
+  height: calc(100% - 3.75rem);
+  top: 0;
+  left: 0;
 }
