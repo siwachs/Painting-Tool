@@ -129,6 +129,13 @@ canvas.addEventListener("click", function (event) {
   }
 });
 
+canvas.addEventListener("contextmenu", function (event) {
+  event.preventDefault();
+
+  const mouseX = event.clientX;
+  const mouseY = event.clientY - document.querySelector("header").offsetHeight;
+});
+
 function drawPage() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawingElements.forEach((item) => {
