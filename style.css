@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 body,
 html {
   margin: 0;
@@ -14,6 +18,36 @@ html {
 
 .nav-items-wrapper {
   height: 3.75rem;
+}
+
+#context-menu {
+  position: absolute;
+  z-index: 1000;
+  width: 130px;
+  background: #1b1a1a;
+  transform: scale(0);
+  transform-origin: top left;
+}
+
+#context-menu.active {
+  transform: scale(1);
+  transition: transform 200ms ease-in-out;
+}
+
+#context-menu .context-item {
+  padding: 8px 10px;
+  font-size: 15px;
+  cursor: pointer;
+  color: #eee;
+}
+
+#context-menu .context-item:hover {
+  background: #555;
+}
+
+#context-menu .context-item i {
+  display: inline-block;
+  margin-right: 5px;
 }
 
 #canvas {

@@ -127,13 +127,40 @@ canvas.addEventListener("click", function (event) {
 
     toggleEditText();
   }
+
+  document.getElementById("context-menu").classList.remove("active");
 });
+
+function deleteText(textIndex) {
+  drawingElements.splice(textIndex, 1);
+  drawPage();
+  document.getElementById("context-menu").classList.remove("active");
+}
 
 canvas.addEventListener("contextmenu", function (event) {
   event.preventDefault();
 
   const mouseX = event.clientX;
   const mouseY = event.clientY - document.querySelector("header").offsetHeight;
+
+  for (let i = drawingElements.length - 1; i >= 0; i--) {
+    if (drawingElements[i].isClicked(mouseX, mouseY)) {
+      const contextMenu = document.getElementById("context-menu");
+      contextMenu.innerHTML = `<div class="context-item" onclick="deleteText(${i})"><i class="fas fa-trash"></i> Delete</div>`;
+      const textWidth = ctx.measureText(drawingElements[i].text).width;
+      const textHeight = parseInt(drawingElements[i].fontSize);
+      console.log(textWidth);
+      console.log(textHeight);
+      const textBottomRightX = drawingElements[i].x + textWidth;
+      const textBottomRightY = drawingElements[i].y + textHeight + 40;
+
+      contextMenu.style.top = textBottomRightY + "px";
+      contextMenu.style.left = textBottomRightX + "px";
+      contextMenu.classList.add("active");
+
+      return;
+    }
+  }
 });
 
 function drawPage() {
