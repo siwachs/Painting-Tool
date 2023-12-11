@@ -1,7 +1,9 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
+const header = document.getElementById("header");
 const addTextBtn = document.getElementById("add-text-btn");
 const editTextBtn = document.getElementById("edit-text-btn");
+const contextMenu = document.getElementById("context-menu");
 const drawingElements = [];
 
 class TextBox {
@@ -10,8 +12,8 @@ class TextBox {
     this.y = y;
     this.text = text || "Edit me";
     this.textColor = textColor || "#000000";
-    this.fontSize = fontSize || "16";
-    this.font = font || "Arial";
+    this.fontSize = fontSize || "22";
+    this.font = font || "sans-serif";
   }
 
   draw() {
@@ -30,12 +32,47 @@ class TextBox {
       mouseY <= this.y
     );
   }
+
+  static delete(index) {
+    drawingElements.splice(index, 1);
+    drawPage();
+    contextMenu.classList.remove("active");
+  }
+
+  static changeColor(index) {
+    const textBox = drawingElements[index];
+    const colorPicker = document.getElementById("colorPicker");
+    colorPicker.addEventListener("input", function (event) {
+      textBox.textColor = event.target.value;
+      drawPage();
+    });
+
+    colorPicker.click();
+    drawPage();
+    contextMenu.classList.remove("active");
+  }
+
+  static changeFontSize(index) {
+    const fontSize = prompt();
+    if (
+      !isNaN(parseFloat(fontSize)) &&
+      isFinite(fontSize) &&
+      fontSize > 0 &&
+      fontSize <= 256 &&
+      fontSize !== null &&
+      fontSize.trim() !== ""
+    ) {
+      drawingElements[index].fontSize = fontSize;
+      drawPage();
+    }
+
+    contextMenu.classList.remove("active");
+  }
 }
 
 function setCanvasSize() {
   canvas.width = innerWidth;
-  canvas.height = innerHeight - document.querySelector("header").offsetHeight;
-  drawPage();
+  canvas.height = innerHeight - header.offsetHeight;
 }
 setCanvasSize();
 window.addEventListener("resize", setCanvasSize);
@@ -88,18 +125,10 @@ function toggleEditText() {
 canvas.addEventListener("click", function (event) {
   if (isAddText) {
     const mouseX = event.clientX;
-    const mouseY =
-      event.clientY - document.querySelector("header").offsetHeight;
+    const mouseY = event.clientY - header.offsetHeight;
     const text = prompt("Enter text:");
     if (text !== null && text.trim() !== "") {
-      const textBox = new TextBox(
-        mouseX,
-        mouseY,
-        text,
-        "#000000",
-        "18",
-        "Arial"
-      );
+      const textBox = new TextBox(mouseX, mouseY, text);
 
       drawingElements.push(textBox);
       toggleAddText();
@@ -109,8 +138,7 @@ canvas.addEventListener("click", function (event) {
 
   if (isEditText) {
     const mouseX = event.clientX;
-    const mouseY =
-      event.clientY - document.querySelector("header").offsetHeight;
+    const mouseY = event.clientY - header.offsetHeight;
 
     for (let i = drawingElements.length - 1; i >= 0; i--) {
       if (drawingElements[i].isClicked(mouseX, mouseY)) {
@@ -128,29 +156,26 @@ canvas.addEventListener("click", function (event) {
     toggleEditText();
   }
 
-  document.getElementById("context-menu").classList.remove("active");
+  contextMenu.classList.remove("active");
 });
-
-function deleteText(textIndex) {
-  drawingElements.splice(textIndex, 1);
-  drawPage();
-  document.getElementById("context-menu").classList.remove("active");
-}
 
 canvas.addEventListener("contextmenu", function (event) {
   event.preventDefault();
 
   const mouseX = event.clientX;
-  const mouseY = event.clientY - document.querySelector("header").offsetHeight;
+  const mouseY = event.clientY - header.offsetHeight;
 
   for (let i = drawingElements.length - 1; i >= 0; i--) {
     if (drawingElements[i].isClicked(mouseX, mouseY)) {
       const contextMenu = document.getElementById("context-menu");
-      contextMenu.innerHTML = `<div class="context-item" onclick="deleteText(${i})"><i class="fas fa-trash"></i> Delete</div>`;
+      contextMenu.innerHTML = `<div class="context-item" onclick="TextBox.delete(${i})"><i class="fas fa-trash"></i> Delete</div>`;
+      contextMenu.innerHTML += `<hr>`;
+      contextMenu.innerHTML += `<div class="context-item" onclick="TextBox.changeColor(${i})"><i class="fas fa-adjust"></i> Change Color <input type="color" id="colorPicker" hidden="true" /></div>`;
+      contextMenu.innerHTML += `<div class="context-item" onclick="TextBox.changeFontSize(${i})"><i class="fas fa-text-height"></i> Change Font Size</div>`;
+
       const textWidth = ctx.measureText(drawingElements[i].text).width;
       const textHeight = parseInt(drawingElements[i].fontSize);
-      console.log(textWidth);
-      console.log(textHeight);
+
       const textBottomRightX = drawingElements[i].x + textWidth;
       const textBottomRightY = drawingElements[i].y + textHeight + 40;
 
