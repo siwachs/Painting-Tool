@@ -73,6 +73,7 @@ class TextBox {
 function setCanvasSize() {
   canvas.width = innerWidth;
   canvas.height = innerHeight - header.offsetHeight;
+  drawPage();
 }
 setCanvasSize();
 window.addEventListener("resize", setCanvasSize);
@@ -159,6 +160,13 @@ canvas.addEventListener("click", function (event) {
   contextMenu.classList.remove("active");
 });
 
+function generateContextMenu(index) {
+  contextMenu.innerHTML = `<div class="context-item" onclick="TextBox.delete(${index})"><i class="fas fa-trash"></i> Delete</div>`;
+  contextMenu.innerHTML += `<hr>`;
+  contextMenu.innerHTML += `<div class="context-item" onclick="TextBox.changeColor(${index})"><i class="fas fa-adjust"></i> Change Color <input type="color" id="colorPicker" hidden="true" /></div>`;
+  contextMenu.innerHTML += `<div class="context-item" onclick="TextBox.changeFontSize(${index})"><i class="fas fa-text-height"></i> Change Font Size</div>`;
+}
+
 canvas.addEventListener("contextmenu", function (event) {
   event.preventDefault();
 
@@ -167,11 +175,7 @@ canvas.addEventListener("contextmenu", function (event) {
 
   for (let i = drawingElements.length - 1; i >= 0; i--) {
     if (drawingElements[i].isClicked(mouseX, mouseY)) {
-      const contextMenu = document.getElementById("context-menu");
-      contextMenu.innerHTML = `<div class="context-item" onclick="TextBox.delete(${i})"><i class="fas fa-trash"></i> Delete</div>`;
-      contextMenu.innerHTML += `<hr>`;
-      contextMenu.innerHTML += `<div class="context-item" onclick="TextBox.changeColor(${i})"><i class="fas fa-adjust"></i> Change Color <input type="color" id="colorPicker" hidden="true" /></div>`;
-      contextMenu.innerHTML += `<div class="context-item" onclick="TextBox.changeFontSize(${i})"><i class="fas fa-text-height"></i> Change Font Size</div>`;
+      generateContextMenu(i);
 
       const textWidth = ctx.measureText(drawingElements[i].text).width;
       const textHeight = parseInt(drawingElements[i].fontSize);
@@ -194,3 +198,55 @@ function drawPage() {
     item.draw();
   });
 }
+
+// Drag and drop text
+let isDragging = false;
+let selectedElementIndex = -1;
+let offsetX, offsetY;
+
+canvas.addEventListener("mousedown", function (event) {
+  const mouseX = event.clientX;
+  const mouseY = event.clientY - header.offsetHeight;
+
+  for (let i = drawingElements.length - 1; i >= 0; i--) {
+    if (drawingElements[i].isClicked(mouseX, mouseY)) {
+      isDragging = true;
+      selectedElementIndex = i;
+      offsetX = mouseX - drawingElements[i].x; // Calculate the offset between the mouse click and the text element's X coordinate.
+      offsetY = mouseY - drawingElements[i].y; // Calculate the offset between the mouse click and the text element's Y coordinate.
+      return;
+    }
+  }
+});
+
+canvas.addEventListener("mousemove", function (event) {
+  if (isDragging && selectedElementIndex !== -1) {
+    const mouseX = event.clientX;
+    const mouseY = event.clientY - header.offsetHeight;
+
+    // Calculate the new position within the canvas boundaries
+    let newX = mouseX - offsetX;
+    let newY = mouseY - offsetY;
+
+    // Ensure the text element stays within the canvas boundaries
+    newX = Math.max(
+      0,
+      Math.min(
+        newX,
+        canvas.width -
+          ctx.measureText(drawingElements[selectedElementIndex].text).width
+      )
+    );
+    newY = Math.max(0, Math.min(newY, canvas.height));
+
+    drawingElements[selectedElementIndex].x = newX;
+    drawingElements[selectedElementIndex].y = newY;
+
+    drawPage();
+  }
+});
+
+canvas.addEventListener("mouseup", function () {
+  isDragging = false;
+  selectedElementIndex = -1;
+});
